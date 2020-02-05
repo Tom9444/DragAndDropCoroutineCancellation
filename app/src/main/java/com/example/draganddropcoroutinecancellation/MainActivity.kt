@@ -41,11 +41,9 @@ class MainActivity : AppCompatActivity() {
                 touch.filter { motionEvent -> motionEvent.action == MotionEvent.ACTION_DOWN }
             val moveGesture =
                 touch.filter { motionEvent -> motionEvent.action == MotionEvent.ACTION_MOVE }
-            val touchUpGesture =
-                touch.filter { motionEvent -> motionEvent.action == MotionEvent.ACTION_UP }
 
 
-            touchDownGesture.flatMapConcat {
+            touchDownGesture.flatMapLatest {
 
                 val originalPosition = Pair(imageView.x , imageView.y)
 
@@ -56,11 +54,6 @@ class MainActivity : AppCompatActivity() {
                     Pair(x, y)
                 }
             }
-                .flatMapLatest{
-                    touchUpGesture
-                    flow { emit(it) }
-                }
-//                .takeUntil(touchUpGesture)
                 .collect {
                     imageView.x += it.first
                     imageView.y += it.second
